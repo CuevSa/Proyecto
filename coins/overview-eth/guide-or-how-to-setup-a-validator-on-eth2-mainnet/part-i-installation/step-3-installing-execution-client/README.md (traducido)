@@ -1,0 +1,71 @@
+# Paso 3: instalar el cliente de ejecución
+
+Tu elección de cualquiera de estas [**Besu**](https://besu.hyperledger.org)**,** [**Nethermind**](https://www.nethermind.io)**,** [**Reth**](reth.md) **or** [**Erigon**](https://github.com/ledgerwatch/erigon)**.**
+
+{% hint style="warning" %}
+Sólo se requiere un cliente de ejecución por nodo,
+{% endhint %}
+
+## **Diversidad de clientes de ejecución**
+
+* Para fortalecer la resiliencia de Ethereum contra posibles ataques o errores de consenso, la mejor práctica es ejecutar un cliente minoritario para aumentar la diversidad de clientes.
+* Encuentre la última distribución del cliente en tiempo de ejecución aquí: [https://clientdiversity.org](https://clientdiversity.org/)
+
+<figure><img src="../../../../../.gitbook/assets/cd-e.png" alt=""><figcaption><p>Sept 2023 Client Diversity</p></figcaption></figure>
+
+ ## **Descripción de los clientes de ejecución**
+
+{% hint style="info" %}
+:shield: **Recomendación** :shield:: **Subconciente** or **Besu**
+{% endhint %}
+
+{% hint style="danger" %}
+:octagonal\_sign:**Muy desalentado** :octagonal\_sign:**: GETH can be** [**hazardous to your all YOUR STAKE.**](https://twitter.com/EthDreamer/status/1749355402473410714)
+{% endhint %}
+
+### sSubconsciente 
+
+* Nethermind: cliente Ethereum de código abierto escrito en .NET Core.
+* Velocidad de sincronización rápida: cuenta con el rendimiento de sincronización del cliente de ejecución más rápido y está diseñado para que pueda comenzar a seguir la cadena y realizar pruebas mientras descarga el historial en segundo plano.
+* Configuración flexible: amplio conjunto de opciones adaptadas a los operadores de nodos.
+* Poda en línea: permite la poda de la base de datos mientras aún está en línea, sin necesidad de apagar el cliente.
+* Proceso de poda que requiere muchos recursos: puede provocar una degradación notable del rendimiento de los nodos de bajo consumo durante el proceso.
+
+### Besu
+
+* Hyperledger Besu: Cliente Ethereum de código abierto bajo licencia Apache 2.0, escrito en Java.
+* Características distintivas: utiliza Bonsai Tries para el almacenamiento de estado para mejorar el rendimiento y los beneficios.
+* Sin mantenimiento: No requiere poda, por lo que efectivamente no requiere mantenimiento.
+
+### Geth
+
+* Geth (Go Ethereum): Una de las implementaciones originales del protocolo Ethereum, escrita en Go y de código totalmente abierto bajo licencia GNU LGPL v3.
+* Estable y confiable: el cliente de ejecución más antiguo y más utilizado con una sólida reputación.
+* Multiproceso: utiliza toda la CPU para mejorar el rendimiento.
+* Uso de RAM ajustable: Configurable hasta un mínimo de 4 GB para Mainnet, que se adapta a varias especificaciones del sistema.
+
+### Erigon
+
+* Erigon: implementación de Ethereum de alto rendimiento centrada en la eficiencia, una sincronización más rápida y una experiencia optimizada escrita en Go.
+* Nacido como una bifurcación de Geth, completamente reescrito para mejorar la velocidad y ahorrar almacenamiento.
+* Sincronización de nodos de archivo más rápida: logra una sincronización completa de nodos en menos de tres días con menos de 2 TB de almacenamiento.
+* Admite varias cadenas de bloques y redes de prueba populares compatibles con EVM.
+* Almacenamiento de estado eficiente: utiliza una base de datos de valores clave para mejorar el rendimiento.
+* Demonio JSON RPC separado: permite llamadas de solo lectura sin requerir el mismo sistema que el binario principal de Erigon, incluso desde una instantánea de la base de datos.
+
+### Reth
+
+* Reth: El cliente Ethereum de capa de ejecución (EL), escrito en Rust, es compatible con todas las implementaciones de capa de consenso (CL).
+* Desarrollado por Paradigm, bajo licencia Apache y MIT.
+* Capacidades: enviar/recibir transacciones, consultar registros y seguimientos, y acceder/interactuar con contratos inteligentes.
+* Priorizar la seguridad, la eficiencia y la facilidad de uso del hardware de consumo.
+
+## Comparación de clientes de ejecución
+
+<table><thead><tr><th>Client</th><th width="111">RAM Use</th><th>Minimum Database Size</th><th>Database Growth</th><th>Time to sync</th></tr></thead><tbody><tr><td><strong>Nethermind</strong></td><td>8 GB</td><td>0.95 TB</td><td>18 GB/week</td><td>Fastest, 2hrs+</td></tr><tr><td><strong>Besu</strong></td><td>12 GB</td><td>1.2 TB</td><td>10 GB/week</td><td>Medium, 16hrs+</td></tr><tr><td><strong>Geth</strong></td><td>8 GB</td><td>1.2 TB</td><td>8 GB/week</td><td>Fast, 8hrs+</td></tr><tr><td><strong>Erigon</strong></td><td>8 GB</td><td>1.2 TB</td><td>8 GB/week</td><td>Medium, 16hrs+</td></tr><tr><td><strong>Reth</strong></td><td>10 GB</td><td>1.2 TB</td><td>4GB/week</td><td>Medium, 16hrs+</td></tr></tbody></table>
+
+#### Notas:
+
+* El tiempo para sincronizar con un estado compatible con las certificaciones iniciales depende de los IOP de su unidad de almacenamiento.
+* La sincronización inicial siempre requiere muchos recursos. La operación sincronizada consume relativamente pocos recursos.
+* Nethermind, Besu, Geth tienen la capacidad de podar la base de datos.
