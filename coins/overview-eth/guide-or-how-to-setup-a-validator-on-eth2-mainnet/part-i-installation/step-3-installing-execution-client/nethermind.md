@@ -1,52 +1,51 @@
 # Nethermind
 
-## Overview
+## Descipción
 
 {% hint style="info" %}
-**Nethermind** is a flagship Ethereum client all about performance and flexibility. Built on **.NET** core, a widespread, enterprise-friendly platform, Nethermind makes integration with existing infrastructures simple, without losing sight of stability, reliability, data integrity, and security.
+**Nethermind** es un cliente insignia de Ethereum que se centra en el rendimiento y la flexibilidad. Creado sobre **.NET** core, una plataforma generalizada y amigable para las empresas, Nethermind simplifica la integración con las infraestructuras existentes, sin perder de vista la estabilidad, confiabilidad, integridad de los datos y seguridad.
 {% endhint %}
 
-#### Official Links
+#### Enlaces Oficiales
 
-| Subject       | Link                                                                                                         |
+| El Tema       | Enlace                                                                                                         |
 | ------------- | ------------------------------------------------------------------------------------------------------------ |
-| Releases      | [https://github.com/NethermindEth/nethermind/releases](https://github.com/NethermindEth/nethermind/releases) |
-| Documentation | [https://docs.nethermind.io](https://docs.nethermind.io/)                                                    |
-| Website       | [https://nethermind.io/nethermind-client](https://nethermind.io/nethermind-client/)                          |
+| Lanzamientos  | [https://github.com/NethermindEth/nethermind/releases](https://github.com/NethermindEth/nethermind/releases) |
+| Documentación | [https://docs.nethermind.io](https://docs.nethermind.io/)                                                    |
+| Sitio Web     | [https://nethermind.io/nethermind-client](https://nethermind.io/nethermind-client/)                          |
 
-### 1. Initial configuration
+### 1. Configuración inicial
 
-Create a service user for the execution service, create data directory and assign ownership.
-
+Cree un usuario de servicio para el servicio de ejecución, cree un directorio de datos y asigne la propiedad.
 ```bash
 sudo adduser --system --no-create-home --group execution
 sudo mkdir -p /var/lib/nethermind
 sudo chown -R execution:execution /var/lib/nethermind
 ```
 
-Install dependencies.
+Instalar dependencias.
 
 ```bash
 sudo apt update
 sudo apt install ccze curl libsnappy-dev libc6-dev jq libc6 unzip -y
 ```
 
-### 2. Install Binaries
+### 2. Instalar binarios
 
-* Downloading binaries is often faster and more convenient.&#x20;
-* Building from source code can offer better compatibility and is more aligned with the spirit of FOSS (free open source software).
+* La descarga de archivos binarios suele ser más rápida y cómoda.&#x20;
+* Construir a partir de código fuente puede ofrecer una mejor compatibilidad y está más alineado con el espíritu de FOSS (software gratuito de código abierto).
 
 <details>
 
 <summary>Option 1 - Download binaries</summary>
 
-Run the following to automatically download the latest linux release, un-zip and cleanup.
+Ejecute lo siguiente para descargar automáticamente la última versión de Linux, descomprimirla y limpiarla.
 
 ```bash
 RELEASE_URL="https://api.github.com/repos/NethermindEth/nethermind/releases/latest"
 BINARIES_URL="$(curl -s $RELEASE_URL | jq -r ".assets[] | select(.name) | .browser_download_url" | grep linux-x64)"
 
-echo Downloading URL: $BINARIES_URL
+echo Descargando URL: $BINARIES_URL
 
 cd $HOME
 wget -O nethermind.zip $BINARIES_URL
@@ -54,7 +53,7 @@ unzip -o nethermind.zip -d $HOME/nethermind
 rm nethermind.zip
 ```
 
-Install the binaries.
+Instale los binarios.
 
 <pre class="language-bash"><code class="lang-bash"><strong>sudo mv $HOME/nethermind /usr/local/bin/nethermind
 </strong></code></pre>
@@ -65,26 +64,26 @@ Install the binaries.
 
 <summary>Option 2 - Build from source code</summary>
 
-Install .NET SDK build dependencies.
+Instale las dependencias de compilación del SDK de .NET.
 
 ```bash
 # Get Ubuntu version
 declare repo_version=$(if command -v lsb_release &> /dev/null; then lsb_release -r -s; else grep -oP '(?<=^VERSION_ID=).+' /etc/os-release | tr -d '"'; fi)
 
-# Download Microsoft signing key and repository
+# Descargue la clave de firma y el repositorio de Microsoft
 wget https://packages.microsoft.com/config/ubuntu/$repo_version/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
 
-# Install Microsoft signing key and repository
+# Instalar la clave de firma y el repositorio de Microsoft
 sudo dpkg -i packages-microsoft-prod.deb
 
-# Clean up
+# Limpiar
 rm packages-microsoft-prod.deb
 
-# Update packages
+# Paquetes de actualización
 sudo apt-get update && sudo apt-get install -y dotnet-sdk-8.0
 ```
 
-Build the binaries.
+Construir los binarios.
 
 ```bash
 mkdir -p ~/git
@@ -102,13 +101,13 @@ git checkout $latestTag
 dotnet publish src/Nethermind/Nethermind.Runner -c release -o nethermind
 ```
 
-Verify Nethermind was properly built by checking the version.
+Verifique que Nethermind se haya creado correctamente comprobando la versión.
 
 ```shell
 ./nethermind/nethermind --version
 ```
 
-Sample output of a compatible version.
+Salida de muestra de una versión compatible.
 
 ```
 Version: 1.25.2+78c7bf5f
@@ -118,22 +117,22 @@ OS: Linux x64
 Runtime: .NET 8.0.1
 ```
 
-Install the binaries.
+Instale los binarios.
 
 <pre class="language-shell"><code class="lang-shell"><strong>sudo mv $HOME/git/nethermind/nethermind /usr/local/bin
 </strong></code></pre>
 
 </details>
 
-### **3. Setup and configure systemd**
+### **3. Instalar y configurar systemd**
 
-Create a **systemd unit file** to define your `execution.service` configuration.
+Cree un **archivo de unidad systemd** para definir su configuración `execution.service`.
 
 ```bash
 sudo nano /etc/systemd/system/execution.service
 ```
 
-Paste the following configuration into the file.
+Pegue la siguiente configuración en el archivo.
 
 ```shell
 [Unit]
@@ -172,28 +171,30 @@ WantedBy=multi-user.target
 ```
 
 {% hint style="info" %}
-Nethermind will prune the database when disk space is low (below 300GB)
+Nethermind podará la base de datos cuando el espacio en disco sea bajo (por debajo de 300 GB)
 {% endhint %}
 
-To exit and save, press `Ctrl` + `X`, then `Y`, then `Enter`.
+Para salir y guardar, presione `Ctrl` + `X`, luego `Y`, luego `Enter`.
 
 Run the following to enable auto-start at boot time.
+
+Ejecute lo siguiente para habilitar el inicio automático en el momento del arranque.
 
 ```bash
 sudo systemctl daemon-reload
 sudo systemctl enable execution
 ```
 
-Finally, start your execution layer client and check it's status.
+Finalmente, inicie su cliente de capa de ejecución y verifique su estado.
 
 ```bash
 sudo systemctl start execution
 sudo systemctl status execution
 ```
 
-Press `Ctrl` + `C` to exit the status.
+Presione `Ctrl` + `C` para salir del estado.
 
-### 4. Helpful execution client commands
+### 4. Comandos útiles del cliente de ejecución
 
 {% tabs %}
 {% tab title="View Logs" %}
@@ -201,7 +202,7 @@ Press `Ctrl` + `C` to exit the status.
 sudo journalctl -fu execution | ccze
 ```
 
-A properly functioning **Nethermind** execution client will indicate "Received new block". For example,
+Un cliente de ejecución **Nethermind** que funcione correctamente indicará "Nuevo bloque recibido". Por ejemplo,
 
 ```
 Nethermind.Runner[2]: 29 Sep 03:00:00 | Received new block:  8372 (0x425ab9...854f4)
@@ -232,11 +233,11 @@ sudo systemctl status execution
 {% endtab %}
 
 {% tab title="Reset Database" %}
-Common reasons to reset the database can include:
+Las razones comunes para restablecer la base de datos pueden incluir:
 
-* Recovering from a corrupted database due to power outage or hardware failure
-* Re-syncing to reduce disk space usage
-* Upgrading to a new storage format
+* Recuperación de una base de datos dañada debido a un corte de energía o una falla de hardware
+* Resincronización para reducir el uso de espacio en disco
+* Actualización a un nuevo formato de almacenamiento
 
 ```bash
 sudo systemctl stop execution
@@ -244,12 +245,12 @@ sudo rm -rf /var/lib/nethermind/*
 sudo systemctl restart execution
 ```
 
-Time to re-sync the execution client can take a few hours up to a day.
+El tiempo para volver a sincronizar el cliente de ejecución puede tardar desde algunas horas hasta un día.
 {% endtab %}
 {% endtabs %}
 
-Now that your execution client is configured and started, proceed to the next step on setting up your consensus client.
+Ahora que su cliente de ejecución está configurado e iniciado, continúe con el siguiente paso para configurar su cliente de consenso.
 
 {% hint style="warning" %}
-If you're checking the logs and see any warnings or errors, please be patient as these will normally resolve once both your execution and consensus clients are fully synced to the Ethereum network.
+Si está revisando los registros y ve alguna advertencia o error, tenga paciencia, ya que normalmente se resolverán una vez que tanto su cliente de ejecución como el de consenso estén completamente sincronizados con la red Ethereum.
 {% endhint %}
